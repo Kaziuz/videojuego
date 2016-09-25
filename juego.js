@@ -1,28 +1,25 @@
+// Johnny Alexander Sepúlveda restrepo
+// Final para canvas Sena - 2016
+
+// Diferentes variables que almacenan animaciones, estados de las animaciones y posiciones generales.
 var canvas;
 var player;
 var anchoPlayer;
 var altoPlayer;
-
 var bombillos;
 var disparos;
-
 var playerImage, disparoImagen, particleImage, backgroundImg, colisionparticleImage;
-
 var score = 0;
-
 var cityImage, spriteCity;
 var nubesImage, spriteNubes;
-
 var posXCerca = 0;
 var posYCerca = 0;
 var posXmitad = 0;
 var posYmitad = 0;
 var posXLejos = 0;
 var posYLejos = 0;
-
 var animacionBombillo;
 var animacionExplotion;
-
 var sonidodisparo;
 var sonidoExterminado;
 
@@ -50,9 +47,11 @@ function setup()
 {
   preLoad(); 
   
+  // cargamos sonidos
   sonidodisparo = loadSound('sonidos/disparo.mp3');
   sonidoExterminado = loadSound('sonidos/exterminado.mp3');
-                
+           
+  // creamos el canvas y lo referenciamos al id html lienzo  
   canvas = createCanvas(800, 600);
   canvas.parent(lienzo);
   
@@ -89,6 +88,7 @@ function setup()
   // numero de bombillos que añadimos al grupo 
   for (var i = 0; i < 20; i++) 
   {
+      // creamos los bombillos haciendo referencia a la función createBombillo
       createBombillo(2, random(width/2), random(height));
   }
   
@@ -107,7 +107,7 @@ function draw()
   // esta seria con un easing para mover el player
   player.velocity.y = (mouseY - player.position.y) * 0.2;
   
-  // movemos los fondos y actualizamos 
+  // movemos los fondos y actualizamos para que inicie desde una posición mas atras
   if(spriteCity.position.x > width + 700)
   spriteCity.position.x = width - 1500;
   
@@ -117,6 +117,7 @@ function draw()
   // reestablece la posicion de los bombillos
   for (var i = 0; i < bombillos.length; i++) 
   {
+      // de abajo hacia arriba
       if(bombillos[i].position.y < 0)
       {
           bombillos[i].position.y = height;
@@ -132,11 +133,11 @@ function draw()
   // colisiones con la libreria play.js
   
   // cuando sobre los bombillos esta el disparo
-  // se ejecuta la animacion
+  // se ejecuta la animacion haciendo referencia al callback bombilloColisionado
   bombillos.overlap(disparos, bombilloColisionado);
   
   // cuando sobre los disparos esta el bombillo
-  // actualizamos el score
+  // actualizamos el score haciendo referencia al callback actualizarScore
   disparos.overlap(bombillos, actualizarScore);
   
   // degub info
@@ -175,7 +176,8 @@ function createBombillo(type, x, y)
     var img = loadImage("img/1"+floor(random(0,3))+".png");
     //bombillo.addImage(img);
     
-    bombillo.addAnimation("defecto", animacionBombillo);
+    // añadimos una animación y la llamamos 
+    bombillo.addAnimation("defecto", animacionBombillo); 
     bombillo.shapeColor = color(10, 96, 214);
     bombillo.setSpeed(2.5-random(type/2), 270);
     bombillo.type = type;
@@ -188,8 +190,11 @@ function createBombillo(type, x, y)
   
     bombillo.mass = 2+bombillo.scale;
     bombillo.setCollider("circle", 0, 0, 50);
-    bombillos.add(bombillo);
+    
+    bombillos.add(bombillo); // añadimos el bombillo al grupo de bombillos
     return bombillo;
+    // es necesario retornar el bombillo devido a que necesitamos referenciarlo 
+    // en otra funcion como parametro de colision 
 }
 
 function bombilloColisionado(bombillo, disparo) {
@@ -242,7 +247,7 @@ function disparar()
     var disparo = createSprite(width+anchoPlayer,height/2, disparoAncho, disparoAlto);
     disparo.shapeColor = color(255, 0, 0);
     disparo.addImage(disparoImagen);
-    disparo.mirrorX(-1);
+    disparo.mirrorX(-1); // para voltear la imagen como espejo, tipo efecto ilustrator
     //disparo.velocity.y = 0;
     //disparo.velocity.x = -7; 
     disparo.setSpeed(8.5, 180);
